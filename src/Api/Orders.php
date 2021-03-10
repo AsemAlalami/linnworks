@@ -208,7 +208,7 @@ class Orders extends ApiClient
             'OrderState' => $orderState,
             'PaymentStatus' => $paymentStatus,
             'PaidOn' => $paidDate ? date('c', strtotime($paidDate)) : null,
-            
+
             //Notes - Particularly useful for personalised items.
             'Notes' => $notes
 
@@ -235,46 +235,82 @@ class Orders extends ApiClient
         ]);
     }
 
-//    public function setGeneralInfo(
-//        $guid
-//    ){
-//        $order = [
-////              "Status" => 1,
-////              "LabelPrinted" => true,
-////              "LabelError" => "sample string 3",
-////              "InvoicePrinted" => true,
-////              "PickListPrinted" => true,
-////              "IsRuleRun" => true,
-////              "Notes" => 7,
-////              "PartShipped" => true,
-////              "Marker" => 64,
-////              "IsParked" => true,
-////              "Identifiers" => null,
-////              "ReferenceNum" => "sample string 10",
-////              "SecondaryReference" => "sample string 11",
-////              "ExternalReferenceNum" => "sample string 12",
-////              "ReceivedDate" => "2018-10-03T11:12:33.5138145+01:00",
-////              "Source" => "sample string 14",
-////              "SubSource" => "sample string 15",
-////              "SiteCode" => "sample string 16",
-////              "HoldOrCancel" => true,
-////              "DespatchByDate" => "2018-10-03T11:12:33.5138145+01:00",
-//              "ScheduledDelivery" => [
-//                  "From" => "2019-02-12T11:12:33.5138145+01:00",
-//                  "To" => "2019-12-12T11:12:33.5138145+01:00"
-//              ],
-//              "HasScheduledDelivery" => true,
-////              "Location" => "201863fe-a0a0-4af3-8956-ac185631f82b",
-////              "NumItems" => 20,
-////              "StockAllocationType" => 0
-//        ];
-//
-//        return $this->post('Orders/SetOrderGeneralInfo',[
-//            'orderId' => $guid,
-//            'info' => json_encode($order),
-//            'wasDraft' => false,
-//        ]);
-//
-//    }
+    public function createNewOrder(string $fulfilmentCenter, $createAsDraft = true)
+    {
+        return $this->post('Orders/CreateNewOrder',[
+            'fulfilmentCenter' => $fulfilmentCenter,
+            'createAsDraft' => $createAsDraft,
+        ]);
+    }
 
+    public function setOrderGeneralInfo(string $orderId, array $info, $wasDraft = true){
+         /* $example = [
+              "Status" => 1,
+              "LabelPrinted" => true,
+              "LabelError" => "sample string 3",
+              "InvoicePrinted" => true,
+              "PickListPrinted" => true,
+              "IsRuleRun" => true,
+              "Notes" => 7,
+              "PartShipped" => true,
+              "Marker" => 64,
+              "IsParked" => true,
+              "Identifiers" => null,
+              "ReferenceNum" => "sample string 10",
+              "SecondaryReference" => "sample string 11",
+              "ExternalReferenceNum" => "sample string 12",
+              "ReceivedDate" => "2018-10-03T11:12:33.5138145+01:00",
+              "Source" => "sample string 14",
+              "SubSource" => "sample string 15",
+              "SiteCode" => "sample string 16",
+              "HoldOrCancel" => true,
+              "DespatchByDate" => "2018-10-03T11:12:33.5138145+01:00",
+              "ScheduledDelivery" => [
+                  "From" => "2019-02-12T11:12:33.5138145+01:00",
+                  "To" => "2019-12-12T11:12:33.5138145+01:00"
+              ],
+              "HasScheduledDelivery" => true,
+              "Location" => "201863fe-a0a0-4af3-8956-ac185631f82b",
+              "NumItems" => 20,
+              "StockAllocationType" => 0
+        ];*/
+
+        return $this->post('Orders/SetOrderGeneralInfo',[
+            'orderId' => $orderId,
+            'info' => json_encode($info),
+            'wasDraft' => $wasDraft,
+        ]);
+    }
+
+    public function setOrderCustomerInfo(string $orderId, array $info, $saveToCrm = false){
+        return $this->post('Orders/SetOrderCustomerInfo',[
+            'orderId' => $orderId,
+            'info' => json_encode($info),
+            'saveToCrm' => $saveToCrm,
+        ]);
+    }
+
+    public function addOrderItem(string $orderId,string $itemId,string $channelSKU, $fulfilmentCenter, int $quantity, array $linePricing){
+        return $this->post('Orders/AddOrderItem',[
+            'orderId' => $orderId,
+            'itemId' => $itemId,
+            'channelSKU' => $channelSKU,
+            'fulfilmentCenter' => $fulfilmentCenter,
+            'quantity' => $quantity,
+            'linePricing' => json_encode($linePricing),
+        ]);
+    }
+
+    public function setOrderTotalsInfo(string $orderId, array $info){
+        return $this->post('Orders/SetOrderTotalsInfo',[
+            'orderId' => $orderId,
+            'info' => json_encode($info),
+        ]);
+    }
+
+    public function completeOrder(string $orderId){
+        return $this->post('Orders/CompleteOrder',[
+            'orderId' => $orderId,
+        ]);
+    }
 }
