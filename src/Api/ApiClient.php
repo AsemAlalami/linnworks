@@ -57,6 +57,10 @@ class ApiClient
 
         $json = json_decode((string) $response->getBody(), true);
 
+        if ($response->getStatusCode() < 300) {
+            return (array) $json;
+        }
+
         if(json_last_error() !== JSON_ERROR_NONE){
             throw new LinnworksResponseCouldNotBeParsed((string) $response->getBody());
         }

@@ -313,4 +313,10 @@ class Orders extends ApiClient
             'orderId' => $orderId,
         ]);
     }
+
+    public function searchProcessedOrders(array $request){
+        return $this->post('ProcessedOrders/SearchProcessedOrders',[
+            'request' => json_encode($request),
+        ]);
+    }
 }
