@@ -319,4 +319,8 @@ class Orders extends ApiClient
             'request' => json_encode($request),
         ]);
     }
+
+    public function getCountries(){
+        return $this->post('Orders/GetCountries');
+    }
 }
