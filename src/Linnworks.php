@@ -3,6 +3,7 @@
 namespace Booni3\Linnworks;
 
 use Booni3\Linnworks\Api\Auth;
+use Booni3\Linnworks\Api\Inventory;
 use Booni3\Linnworks\Api\Locations;
 use Booni3\Linnworks\Api\Orders;
 use Booni3\Linnworks\Api\PostalServices;
@@ -32,7 +33,7 @@ class Linnworks
         $this->client = $client ?: $this->makeClient();
         $this->config = $config;
 
-        if(! $this->bearer){
+        if (!$this->bearer) {
             $this->refreshToken();
         }
     }
@@ -44,12 +45,14 @@ class Linnworks
 
     private function makeClient(): GuzzleClient
     {
-        return new GuzzleClient([
-            'timeout' => $this->config['timeout'] ?? 15
-        ]);
+        return new GuzzleClient(
+            [
+                'timeout' => $this->config['timeout'] ?? 15
+            ]
+        );
     }
 
-    private function refreshToken() : void
+    private function refreshToken(): void
     {
         $parameters = [
             "ApplicationId" => $this->config['applicationId'],
@@ -60,13 +63,13 @@ class Linnworks
         $response = (new Auth($this->client, self::BASE_URI.'/api/', null))
             ->AuthorizeByApplication($parameters);
 
-        if(! ($response['Token'] ?? null)){
+        if (!($response['Token'] ?? null)) {
             throw new LinnworksAuthenticationException($response['message'] ?? '');
         }
 
         $this->bearer = $response['Token'];
 
-        $this->server = $response['Server'] .'/api/';
+        $this->server = $response['Server'].'/api/';
     }
 
     public function orders(): Orders
@@ -92,6 +95,11 @@ class Linnworks
     public function stock(): Stock
     {
         return new Stock($this->client, $this->server, $this->bearer);
+    }
+
+    public function inventory(): Inventory
+    {
+        return new Inventory($this->client, $this->server, $this->bearer);
     }
 
 }
