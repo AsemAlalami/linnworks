@@ -7,6 +7,7 @@ use Booni3\Linnworks\Api\Inventory;
 use Booni3\Linnworks\Api\Locations;
 use Booni3\Linnworks\Api\Orders;
 use Booni3\Linnworks\Api\PostalServices;
+use Booni3\Linnworks\Api\ProcessedOrders;
 use Booni3\Linnworks\Api\ReturnsRefunds;
 use Booni3\Linnworks\Api\Stock;
 use Booni3\Linnworks\Exceptions\LinnworksAuthenticationException;
@@ -100,6 +101,11 @@ class Linnworks
     public function inventory(): Inventory
     {
         return new Inventory($this->client, $this->server, $this->bearer);
+    }
+
+    public function processedOrders(): ProcessedOrders
+    {
+        return new ProcessedOrders($this->client, $this->server, $this->bearer);
     }
 
 }
