@@ -314,12 +314,6 @@ class Orders extends ApiClient
         ]);
     }
 
-    public function searchProcessedOrders(array $request){
-        return $this->post('ProcessedOrders/SearchProcessedOrders',[
-            'request' => json_encode($request),
-        ]);
-    }
-
     public function getCountries(){
         return $this->post('Orders/GetCountries');
     }
